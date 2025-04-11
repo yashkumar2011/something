@@ -19,6 +19,7 @@
       font-family: 'Noto Serif JP', serif;
       color: #3e2723;
       transition: background 1s;
+      -webkit-tap-highlight-color: transparent;
     }
 
     h1 {
@@ -54,17 +55,17 @@
 <body>
   <div class="container">
     <h1 id="timer">03:00</h1>
-    <p>Press <strong>SPACE</strong> to continue to the next question</p>
+    <p>Press <strong>SPACE</strong> or tap anywhere to continue</p>
     <div class="question" id="questionNumber">Question 1</div>
   </div>
 
-  <audio id="ding" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+  <audio id="ding" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 
   <script>
     let totalTime = 180;
     let interval;
     let questionCount = 1;
-    const ding = document.getElementById('ding');
+    let hasStarted = false;
 
     function startTimer() {
       clearInterval(interval);
@@ -76,7 +77,7 @@
         updateDisplay(timeLeft);
 
         if (timeLeft <= 0) {
-          nextQuestion();
+          nextQuestion(true);
         }
       }, 1000);
     }
@@ -87,28 +88,29 @@
       document.getElementById('timer').textContent = `${min}:${sec}`;
     }
 
-    function nextQuestion() {
-      if (questionCount === 1) {
-        ding.play();
+    function nextQuestion(auto = false) {
+      if (auto && questionCount === 1) {
+        document.getElementById('ding').play();
         setTimeout(() => {
           questionCount++;
-          updateQuestion();
+          document.getElementById('questionNumber').textContent = `Question ${questionCount}`;
+          startTimer();
         }, 2000);
       } else {
         questionCount++;
-        updateQuestion();
+        document.getElementById('questionNumber').textContent = `Question ${questionCount}`;
+        startTimer();
       }
-    }
-
-    function updateQuestion() {
-      document.getElementById('questionNumber').textContent = `Question ${questionCount}`;
-      startTimer();
     }
 
     document.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
         nextQuestion();
       }
+    });
+
+    document.addEventListener('click', () => {
+      nextQuestion();
     });
 
     startTimer();
