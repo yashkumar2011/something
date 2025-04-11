@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zen Mode Timer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(to top, #d7ccc8, #efebe9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Noto Serif JP', serif;
+      color: #3e2723;
+      transition: background 1s;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      color: #4e342e;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      color: #5d4037;
+    }
+
+    .question {
+      margin-top: 2rem;
+      font-size: 1.5rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="timer">03:00</h1>
+    <p>Press <strong>SPACE</strong> to continue to the next question</p>
+    <div class="question" id="questionNumber">Question 1</div>
+  </div>
+
+  <audio id="ding" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+
+  <script>
+    let totalTime = 180;
+    let interval;
+    let questionCount = 1;
+    const ding = document.getElementById('ding');
+
+    function startTimer() {
+      clearInterval(interval);
+      let timeLeft = totalTime;
+      updateDisplay(timeLeft);
+
+      interval = setInterval(() => {
+        timeLeft--;
+        updateDisplay(timeLeft);
+
+        if (timeLeft <= 0) {
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function updateDisplay(seconds) {
+      const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const sec = String(seconds % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = `${min}:${sec}`;
+    }
+
+    function nextQuestion() {
+      if (questionCount === 1) {
+        ding.play();
+        setTimeout(() => {
+          questionCount++;
+          updateQuestion();
+        }, 2000);
+      } else {
+        questionCount++;
+        updateQuestion();
+      }
+    }
+
+    function updateQuestion() {
+      document.getElementById('questionNumber').textContent = `Question ${questionCount}`;
+      startTimer();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        nextQuestion();
+      }
+    });
+
+    startTimer();
+  </script>
+</body>
+</html>

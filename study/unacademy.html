@@ -165,6 +165,10 @@
 
   <h2>Class 10th</h2>
   <h3>Chapter 1 - Real Numbers</h3>
+  <div class="lecture">
+    <input type="checkbox" id="lec4" class="custom-checkbox" onchange="saveCheckboxState(this)">
+    <label for="lec4"><a href="https://unacademy.com/class/doubt-clearing-session/DFGP7M6C" target="_blank">Lecture 1</a></label>
+  </div>
 
   <div class="progress-bar">
     <div class="progress-fill" id="progressFill"></div>
@@ -181,7 +185,7 @@
   </div>
 
   <script>
-    const lectureIds = ['lec1', 'lec2', 'lec3'];
+    const lectureIds = ['lec1', 'lec2', 'lec3', 'lec4'];
 
     function saveCheckboxState(checkbox) {
       document.cookie = checkbox.id + "=" + checkbox.checked + ";path=/";
@@ -203,7 +207,6 @@
       document.getElementById("progressFill").style.width = percentage + "%";
       document.getElementById("progressText").innerText = `${percentage}% Complete`;
 
-      // 💥 Show popup on 100% completion
       if (percentage === 100) {
         document.getElementById("completionModal").style.display = "flex";
       }
@@ -216,12 +219,4 @@
     window.onload = function () {
       lectureIds.forEach(id => {
         const state = getCookie(id);
-        if (state === "true") {
-          document.getElementById(id).checked = true;
-        }
-      });
-      updateProgress();
-    };
-  </script>
-</body>
-</html>
+        if (
